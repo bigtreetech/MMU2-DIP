@@ -10,17 +10,19 @@
 
 #define CHOPPER_TIMING  CHOPPER_DEFAULT_12V
 
-// Print simple drive status information
+/* Print simple drive status information
+ * Note that debug mode cannot connect the motherboard normally
+*/
 // #define TMC_DEBUG
 
 #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
 #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
 
 /* Stepper Drivers
-*  Options: spi:TMC2130
+*  Options: spi:TMC2130, TMC5160
 *           uart:TMC2209,TMC2208(TMC2208 no stallguard)
 */
-#define TMC2209            1
+#define TMC2130            1
 
 // SG_THR stallguard treshold (sensitivity),  TMC2209: 0...255. TMC2130: 63...-64
 // !!! This setting is not universal, and the values set by different machines are different !!!
@@ -41,8 +43,8 @@
 */
 #define CURRENT_HOLDING_STEALTH {1, 8, 8}
 #define CURRENT_HOLDING_NORMAL  {1, 8, 8}
-#define CURRENT_RUNNING_STEALTH {20, 22, 22}
-#define CURRENT_RUNNING_NORMAL  {22, 23, 25}
+#define CURRENT_RUNNING_STEALTH {18, 20, 20}
+#define CURRENT_RUNNING_NORMAL  {20, 22, 23}
 #define CURRENT_HOMING          {1, 22, 22}
 
 //number of extruders [1 2 3 4 5]

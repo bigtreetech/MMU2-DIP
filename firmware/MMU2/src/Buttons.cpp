@@ -22,7 +22,7 @@ void settings_bowden_length();
 bool settings_select_filament()
 {
   manual_extruder_selector();
-
+  delay(50);
   if(Btn::middle == buttonPressed())
   {
     shr16_set_led(2 << 2 * (4 - active_extruder));
@@ -122,7 +122,7 @@ bool setupMenu()
         }
         break;
     case Btn::left:
-        if (_menu < 4) { _menu++; delay(800); }
+        if (_menu < 4) { _menu++; delay(500); }
         break;
     default:
         break;

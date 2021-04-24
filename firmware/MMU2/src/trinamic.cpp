@@ -64,9 +64,6 @@ static uint8_t sgt_min = 0, sgt_max = 255;
 #endif
 
 #ifdef TMC2130
-  #define AX_PUL_CS_PIN    PB1
-  #define AX_SEL_CS_PIN    PB2
-  #define AX_IDL_CS_PIN    PB10
   TMC2130Stepper pulley(AX_PUL_CS_PIN, R_SENSE);
   TMC2130Stepper selector(AX_SEL_CS_PIN, R_SENSE);
   TMC2130Stepper idler(AX_IDL_CS_PIN, R_SENSE);   // Hardware SPI
@@ -74,9 +71,6 @@ static uint8_t sgt_min = 0, sgt_max = 255;
 #endif
 
 #ifdef TMC5160
-  #define AX_PUL_CS_PIN    PB1
-  #define AX_SEL_CS_PIN    PB2
-  #define AX_IDL_CS_PIN    PB10
   TMC5160Stepper pulley(AX_PUL_CS_PIN, R_SENSE);
   TMC5160Stepper selector(AX_SEL_CS_PIN, R_SENSE);
   TMC5160Stepper idler(AX_IDL_CS_PIN, R_SENSE); // Hardware SPI
@@ -124,6 +118,15 @@ uint8_t tmc_usteps2mres(AXIS axis)
   }
   return 0;
 }
+
+uint8_t tmc_enable_stallguard(TMC5160Stepper &st, uint8_t stealthchop_was_enabled) {
+  stealthchop_was_enabled = st.en_pwm_mode();
+  delay(5);
+  st.TCOOLTHRS(0x5FF);
+  st.diag1_stall(true);
+  return stealthchop_was_enabled;
+}
+
 
 uint8_t tmc_enable_stallguard(TMC2130Stepper &st, uint8_t stealthchop_was_enabled) {
   stealthchop_was_enabled = st.en_pwm_mode();
@@ -574,26 +577,30 @@ void tmc_disable_axis(AXIS axis)
 #ifdef TMC5160
   void tmc_init_axis(TMC5160Stepper &st, AXIS axis, TMC_MODE mode)
   {
-        uint8_t current_running_normal[3] = CURRENT_RUNNING_NORMAL;
+    uint8_t current_running_normal[3] = CURRENT_RUNNING_NORMAL;
     uint8_t current_running_stealth[3] = CURRENT_RUNNING_STEALTH;
     uint8_t current_holding_normal[3] = CURRENT_HOLDING_NORMAL;
     uint8_t current_holding_stealth[3] = CURRENT_HOLDING_STEALTH;
     uint8_t current_homing[3] = CURRENT_HOMING;
     uint8_t current_h = 0;
     uint8_t current_r = 0;
+    uint8_t stealth = 0;
     switch (mode)
     {
     case HOMING_MODE:
       current_h = current_holding_normal[axis];
       current_r = current_homing[axis];
+      stealth = true;
       break; //drivers in normal mode, homing currents
     case NORMAL_MODE:
       current_h = current_holding_normal[axis];
       current_r = current_running_normal[axis];
+      stealth = false;
       break; //drivers in normal mode
     case STEALTH_MODE:
       current_h = current_holding_stealth[axis];
       current_r = current_running_stealth[axis];
+      stealth = true;
       break; //drivers in stealth mode
     default:
       break;
@@ -601,7 +608,56 @@ void tmc_disable_axis(AXIS axis)
     current_h = (int8_t)constrain(current_h,current_min, current_max);
     current_r = (int8_t)constrain(current_r,current_min, current_max);
 
-  /*TODO: Add configuration parameters */
+    CHOPCONF_t chopconf{0};
+    chopconf.tbl = 1;
+    chopconf.toff = chopper_timing.toff;
+    chopconf.intpol = INTERPOLATE;
+    chopconf.hend = chopper_timing.hend + 3;
+    chopconf.hstrt = chopper_timing.hstrt - 1;
+    chopconf.mres = tmc_usteps2mres(axis);
+    st.CHOPCONF(chopconf.sr);
+
+    IHOLD_IRUN_t ihold_irun{0};
+    ihold_irun.ihold = current_h;
+    ihold_irun.irun = current_r;
+    ihold_irun.iholddelay = 10;
+    st.IHOLD_IRUN(ihold_irun.sr);
+
+    COOLCONF_t coolconf{0};
+    coolconf.sgt = __sg_thr(axis);
+    st.COOLCONF(coolconf.sr);
+
+    GCONF_t gconf{0};
+    gconf.shaft = 1;
+    gconf.diag1_stall = 1;
+    gconf.diag1_pushpull = 1;
+    gconf.en_pwm_mode = stealth;
+    st.GCONF(gconf.sr);
+
+    st.TPOWERDOWN(128); // ~2s until driver lowers to hold current
+
+    TMC2160_n::PWMCONF_t pwmconf{0};
+    pwmconf.pwm_lim = 12;
+    pwmconf.pwm_reg = 8;
+    pwmconf.pwm_autograd = true;
+    pwmconf.pwm_autoscale = true;
+    pwmconf.pwm_freq = 0b01;
+    pwmconf.pwm_grad = 14;
+    pwmconf.pwm_ofs = 36;
+    st.PWMCONF(pwmconf.sr);
+
+    if(mode == HOMING_MODE)
+    {
+      stealthchop_was_enabled = tmc_enable_stallguard(st,stealthchop_was_enabled);
+    }
+    else if(mode == STEALTH_MODE)
+    {
+      tmc_disable_stallguard(st, 1);
+    }
+    else
+    {
+      tmc_disable_stallguard(st, 0);
+    } 
 
   }
 #endif

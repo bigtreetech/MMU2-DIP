@@ -38,16 +38,20 @@ bool feed_filament(bool timeout)
 {
 	bool loaded = false;
 	const uint_least8_t finda_limit = 10;
+  uint8_t current_running_normal[3] = CURRENT_RUNNING_NORMAL;
+  uint8_t current_holding_normal[3] = CURRENT_HOLDING_NORMAL;
+  uint8_t current_running_stealth[3] = CURRENT_RUNNING_STEALTH;
+  uint8_t current_holding_stealth[3] = CURRENT_HOLDING_STEALTH;
 
 	motion_engage_idler();
 	set_pulley_dir_push();
 	if(tmc_mode == NORMAL_MODE)
-	{
-		tmc_current_normal(pulley, AX_PUL, 1, 15);
+	{       
+		tmc_current_normal(pulley, AX_PUL, current_holding_normal[1], current_running_normal[1]);
 	}
 	else
 	{
-		tmc_current_stealth(pulley, AX_PUL, 1, 15); //probably needs tuning of currents
+		tmc_current_stealth(pulley, AX_PUL, current_holding_stealth[1], current_running_stealth[1]); //probably needs tuning of currents
 	}
 
 	{

@@ -317,7 +317,11 @@ void manual_extruder_selector()
   if ((Btn::left|Btn::right) & buttonPressed())
   {
     delay(100);
-
+    if (digitalRead(FIL_RUNOUT))
+    {
+      signal_filament_present();
+      return ;
+    }
     switch (buttonPressed())
     {
       case Btn::right:
