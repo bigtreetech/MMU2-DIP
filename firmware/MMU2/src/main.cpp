@@ -127,7 +127,7 @@ void signal_ok_after_load_failure()
 //! @retval false not present any more
 bool filament_presence_signaler()
 {
-  if (digitalRead(FIL_RUNOUT))
+  if (digitalRead(FIL_RUNOUT) == FILAMENT_SENSOR_INVERTING)
   {  
     signal_filament_present();
     return true;
@@ -161,11 +161,11 @@ bool filament_presence_signaler()
 //! @n b - blinking
 void check_filament_not_present()
 {
-  while (digitalRead(FIL_RUNOUT) == 1)
+  while (digitalRead(FIL_RUNOUT) == FILAMENT_SENSOR_INVERTING)
   {
     while (Btn::right != buttonPressed())
     {
-      if (digitalRead(FIL_RUNOUT) == 1)
+      if (digitalRead(FIL_RUNOUT) == FILAMENT_SENSOR_INVERTING)
       {
         signal_filament_present();
       }
@@ -277,7 +277,7 @@ void setup(void)
     motion_set_idler(filament);
   }
 
-  if (digitalRead(FIL_RUNOUT) == 1) isFilamentLoaded = true;
+  if (digitalRead(FIL_RUNOUT) == FILAMENT_SENSOR_INVERTING) isFilamentLoaded = true;
 
   #ifdef TMC_DEBUG
   test_tmc_connection();
@@ -317,7 +317,7 @@ void manual_extruder_selector()
   if ((Btn::left|Btn::right) & buttonPressed())
   {
     delay(100);
-    if (digitalRead(FIL_RUNOUT))
+    if (digitalRead(FIL_RUNOUT) == FILAMENT_SENSOR_INVERTING)
     {
       signal_filament_present();
       return ;
@@ -502,7 +502,7 @@ void process_commands()
     {
       if (value == 0) //! P0 Read finda
       {
-      if(digitalRead(FIL_RUNOUT) == 1)
+      if(digitalRead(FIL_RUNOUT) == FILAMENT_SENSOR_INVERTING)
       {
         printf_P("1ok\n");
       }

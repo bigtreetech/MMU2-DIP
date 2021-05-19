@@ -127,44 +127,6 @@ void tmc_init_axis(TMC2130Stepper &st, AXIS axis, TMC_MODE mode);
 void tmc_init_axis(TMC5160Stepper &st, AXIS axis, TMC_MODE mode);
 #endif
 
-void tmc_current_normal(
-  #ifdef TMC2208
-    TMC2208Stepper &st,
-  #endif
-  #ifdef TMC2209
-    TMC2209Stepper &st,
-  #endif
-  #ifdef TMC2130
-    TMC2130Stepper &st,
-  #endif
-  #ifdef TMC5160
-    TMC5160Stepper &st,
-  #endif
-  #ifdef TMC5161
-    TMC5161Stepper &st,
-  #endif  
-  AXIS axis,
-  uint8_t current_h, 
-  uint8_t current_r);
-void tmc_current_stealth(
-  #ifdef TMC2208
-    TMC2208Stepper &st,
-  #endif
-  #ifdef TMC2209
-    TMC2209Stepper &st,
-  #endif
-  #ifdef TMC2130
-    TMC2130Stepper &st,
-  #endif
-  #ifdef TMC5160
-    TMC5160Stepper &st,
-  #endif
-  #ifdef TMC5161
-    TMC5161Stepper &st,
-  #endif  
-  AXIS axis, 
-  uint8_t current_h, 
-  uint8_t current_r);
 void tmc_disable_axis(AXIS axis);
 
 #if defined(__cplusplus)

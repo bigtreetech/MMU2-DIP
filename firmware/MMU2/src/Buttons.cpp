@@ -173,7 +173,6 @@ void settings_bowden_length()
   {
     BowdenLength bowdenLength;
     load_filament_withSensor(false);
-    tmc_current_normal(pulley, AX_PUL, 1, 30);
 
     uint32_t saved_millis=millis();
     bool button_active = false;
