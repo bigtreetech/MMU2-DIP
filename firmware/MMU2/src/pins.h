@@ -4,9 +4,9 @@
 #include "trinamic.h"
 
 // SPI
-#define AX_PUL_CS         PB1
-#define AX_SET_CS         PB2
-#define AX_IDL_CS         PB10
+#define AX_PUL_CS_PIN     PB1
+#define AX_SEL_CS_PIN     PB2
+#define AX_IDL_CS_PIN     PB10
 #define SPI_PORT          GPIOA
 #define MOSI              PA7
 #define MISO              PA6
