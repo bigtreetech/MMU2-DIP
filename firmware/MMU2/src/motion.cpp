@@ -140,7 +140,7 @@ static void unload_to_finda()
     }
     delayMicroseconds(delay);
     
-    if (digitalRead(FIL_RUNOUT) != 1) _endstop_hit++;
+    if (digitalRead(FIL_RUNOUT) != FILAMENT_SENSOR_INVERTING) _endstop_hit++;
 
   }
 }
@@ -203,7 +203,7 @@ void motion_unload_to_finda()
   {
     unload_to_finda();
     // if (tmc_read_gstat() && digitalRead(FIL_RUNOUT) == 1)
-    if (digitalRead(FIL_RUNOUT) == 1)
+    if (digitalRead(FIL_RUNOUT) == FILAMENT_SENSOR_INVERTING)
     {
       if (tries == tr) unrecoverable_error();
       drive_error();
