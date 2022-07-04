@@ -31,7 +31,7 @@
 *  Options: spi:TMC2130, TMC5160
 *           uart:TMC2209,TMC2208(TMC2208 no stallguard)
 */
-#define TMC2130            1
+#define TMC2209            1
 
 // SG_THR stallguard treshold (sensitivity),  TMC2209: 0...255. TMC2130: 63...-64
 // !!! This setting is not universal, and the values set by different machines are different !!!
