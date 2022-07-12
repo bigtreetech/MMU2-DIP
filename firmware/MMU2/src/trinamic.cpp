@@ -44,7 +44,7 @@ typedef struct {
   int8_t hend;
 } chopper_timing_t;
 
-static constexpr chopper_timing_t chopper_timing = CHOPPER_DEFAULT_12V;
+static constexpr chopper_timing_t chopper_timing = CHOPPER_TIMING;
 
 #ifdef TMC2208
 TMC2208Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE);
