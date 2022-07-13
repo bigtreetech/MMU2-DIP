@@ -46,7 +46,7 @@ static constexpr chopper_timing_t chopper_timing = CHOPPER_TIMING;
 
 #ifdef TMC2208
   #ifndef R_SENSE
-    #define R_SENSE 0.11f
+    #define R_SENSE 0.11
   #endif
   TMC2208Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE);
   TMC2208Stepper selector(AX_SEL_RX, AX_SEL_TX, R_SENSE);
@@ -60,7 +60,7 @@ static constexpr chopper_timing_t chopper_timing = CHOPPER_TIMING;
 #ifdef TMC2209
   #define DRIVER_ADDRESS 0b00 // TMC2209 Driver address according to MS1 and MS2
   #ifndef R_SENSE
-    #define R_SENSE 0.11f
+    #define R_SENSE 0.11
   #endif
   TMC2209Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE, DRIVER_ADDRESS);
   TMC2209Stepper selector(AX_SEL_RX, AX_SEL_TX, R_SENSE, DRIVER_ADDRESS);
@@ -70,7 +70,7 @@ static constexpr chopper_timing_t chopper_timing = CHOPPER_TIMING;
 
 #ifdef TMC2130
   #ifndef R_SENSE
-    #define R_SENSE 0.11f
+    #define R_SENSE 0.11
   #endif
   TMC2130Stepper pulley(AX_PUL_CS_PIN, R_SENSE);
   TMC2130Stepper selector(AX_SEL_CS_PIN, R_SENSE);
@@ -80,7 +80,7 @@ static constexpr chopper_timing_t chopper_timing = CHOPPER_TIMING;
 
 #ifdef TMC5160
   #ifndef R_SENSE
-    #define R_SENSE 0.075f
+    #define R_SENSE 0.075
   #endif
   TMC5160Stepper pulley(AX_PUL_CS_PIN, R_SENSE);
   TMC5160Stepper selector(AX_SEL_CS_PIN, R_SENSE);
