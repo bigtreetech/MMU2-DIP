@@ -72,9 +72,6 @@ inline void pulley_step_pin_reset()    {GPIOB->ODR&=~(1<<4);}
   #define TMC_DRIVE
 #endif
 
-#define DRIVER_ADDRESS 0b00 // TMC2209 Driver address according to MS1 and MS2
-#define R_SENSE       0.11f // Match to your driver
-
 extern uint8_t idler_diag;
 extern uint8_t sel_diag;
 

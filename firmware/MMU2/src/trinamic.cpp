@@ -31,8 +31,6 @@
 #include "shr16.h"
 
 
-#define DRIVER_ADDRESS 0b00 // TMC2209 Driver address according to MS1 and MS2
-#define R_SENSE        0.11f // Match to your driver
 #define TMC_BAUD_RATE  19200
 #define current_max    28
 #define current_min    0
@@ -47,23 +45,33 @@ typedef struct {
 static constexpr chopper_timing_t chopper_timing = CHOPPER_TIMING;
 
 #ifdef TMC2208
-TMC2208Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE);
-TMC2208Stepper selector(AX_SEL_RX, AX_SEL_TX, R_SENSE);
-TMC2208Stepper idler(AX_IDL_RX, AX_IDL_TX, R_SENSE);
-// TMC2208Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE, DRIVER_ADDRESS);
-// TMC2208Stepper selector(AX_SEL_RX, AX_SEL_TX, R_SENSE, DRIVER_ADDRESS);
-// TMC2208Stepper idler(AX_IDL_RX, AX_IDL_TX, R_SENSE, DRIVER_ADDRESS);
-static uint8_t sgt_min = 0, sgt_max = 255;
+  #ifndef R_SENSE
+    #define R_SENSE 0.11f
+  #endif
+  TMC2208Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE);
+  TMC2208Stepper selector(AX_SEL_RX, AX_SEL_TX, R_SENSE);
+  TMC2208Stepper idler(AX_IDL_RX, AX_IDL_TX, R_SENSE);
+  // TMC2208Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE, DRIVER_ADDRESS);
+  // TMC2208Stepper selector(AX_SEL_RX, AX_SEL_TX, R_SENSE, DRIVER_ADDRESS);
+  // TMC2208Stepper idler(AX_IDL_RX, AX_IDL_TX, R_SENSE, DRIVER_ADDRESS);
+  static uint8_t sgt_min = 0, sgt_max = 255;
 #endif
 
 #ifdef TMC2209
-TMC2209Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE, DRIVER_ADDRESS);
-TMC2209Stepper selector(AX_SEL_RX, AX_SEL_TX, R_SENSE, DRIVER_ADDRESS);
-TMC2209Stepper idler(AX_IDL_RX, AX_IDL_TX, R_SENSE, DRIVER_ADDRESS);
-static uint8_t sgt_min = 0, sgt_max = 255;
+  #define DRIVER_ADDRESS 0b00 // TMC2209 Driver address according to MS1 and MS2
+  #ifndef R_SENSE
+    #define R_SENSE 0.11f
+  #endif
+  TMC2209Stepper pulley(AX_PUL_RX, AX_PUL_TX, R_SENSE, DRIVER_ADDRESS);
+  TMC2209Stepper selector(AX_SEL_RX, AX_SEL_TX, R_SENSE, DRIVER_ADDRESS);
+  TMC2209Stepper idler(AX_IDL_RX, AX_IDL_TX, R_SENSE, DRIVER_ADDRESS);
+  static uint8_t sgt_min = 0, sgt_max = 255;
 #endif
 
 #ifdef TMC2130
+  #ifndef R_SENSE
+    #define R_SENSE 0.11f
+  #endif
   TMC2130Stepper pulley(AX_PUL_CS_PIN, R_SENSE);
   TMC2130Stepper selector(AX_SEL_CS_PIN, R_SENSE);
   TMC2130Stepper idler(AX_IDL_CS_PIN, R_SENSE);   // Hardware SPI
@@ -71,6 +79,9 @@ static uint8_t sgt_min = 0, sgt_max = 255;
 #endif
 
 #ifdef TMC5160
+  #ifndef R_SENSE
+    #define R_SENSE 0.075f
+  #endif
   TMC5160Stepper pulley(AX_PUL_CS_PIN, R_SENSE);
   TMC5160Stepper selector(AX_SEL_CS_PIN, R_SENSE);
   TMC5160Stepper idler(AX_IDL_CS_PIN, R_SENSE); // Hardware SPI

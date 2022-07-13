@@ -54,6 +54,8 @@
 #define CURRENT_HOLDING     {0,  2,  8}
 #define CURRENT_RUNNING     {15, 15, 15}
 
+// Override default RSENSE value
+// #define R_SENSE        0.11f
 
 //number of extruders [1 2 3 4 5]
 #define EXTRUDERS 5
