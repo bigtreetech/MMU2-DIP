@@ -101,6 +101,8 @@ int8_t __sg_thr(AXIS axis)
 	case AX_IDL:
     stallguard=(int8_t)constrain(TMC_SG_THR_IDL,sgt_min, sgt_max);
 	  break;
+  default:
+    break;
 	}
   return stallguard;
 }
@@ -128,6 +130,7 @@ uint8_t tmc_direction(AXIS axis)
     case AX_IDL: return IDLER_DIR_INVERTING; 
     default: break;
   }
+  return 0;
 }
 
 

@@ -84,20 +84,20 @@ void motion_set_idler_selector(uint8_t idler, uint8_t selector)
   }
 }
 
-static void check_idler_drive_error()
-{
-  // const uint8_t tries = 2;
-  // for (uint8_t i = 0; i <= tries; ++i)
-  // {
-  //   if (!tmc_read_gstat()) break;
-  //   else
-  //   {
-  //     if (tries == i) unrecoverable_error();
-  //     drive_error();
-  //     rehome_idler();
-  //   }
-  // }
-}
+// static void check_idler_drive_error()
+// {
+//   const uint8_t tries = 2;
+//   for (uint8_t i = 0; i <= tries; ++i)
+//   {
+//     if (!tmc_read_gstat()) break;
+//     else
+//     {
+//       if (tries == i) unrecoverable_error();
+//       drive_error();
+//       rehome_idler();
+//     }
+//   }
+// }
 
 void motion_engage_idler()
 {
