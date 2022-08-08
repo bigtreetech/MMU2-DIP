@@ -1,0 +1,43 @@
+#
+# test-build.yml
+# Do test build to catch compile errors
+#
+
+name: CI
+
+on:
+  pull_request:
+    paths-ignore:
+    - 3DModel/**
+    - hardware/**
+    - '**/*.md'
+  push:
+    paths-ignore:
+    - 3DModel/**
+    - hardware/**
+    - '**/*.md'
+
+jobs:
+  test_builds:
+    name: Test Build
+    if: github.repository == 'bigtreetech/MMU2-DIP'
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Out Commit
+      uses: actions/checkout@v3
+
+    - name: Select Python 3.7
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.7' # Version range or exact version of a Python version to use, using semvers version range syntax.
+        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+
+    - name: Build MMU2-DIP
+      run: |
+        pip install -U platformio
+        pio upgrade
+        pio pkg update --global
+        cd firmware
+        pio run
